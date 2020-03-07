@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa de cafeterias</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.2.1/css/ol.css" type="text/css">
+    <style>
+      .map {
+        height: 80vh;
+        width: 100%;
+      }
+    </style>
+    
+</head>
+<body>
+    <div id="map" class="map"></div>
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.2.1/build/ol.js"></script>
+    <script>
+        let cafeterias=JSON.parse('{{ cafeterias | escapejs }}')
+        let layerCafeterias=new ol.layer.Vector({
+            source:new ol.source.Vector({
+                features:(new ol.format.GeoJSON()).readFeatures(cafeterias)
+            }),
+            visible:true,
+            projection:"EPSG:4326"
+        })
+
+        var map = new ol.Map({
+        target: 'map',
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.OSM()
+            
+          }),
+          layerCafeterias
+        ],
+        view: new ol.View({
+            center:[-99.14482,23.74118],
+          zoom: 4,
+          projection:"EPSG:4326",  
+        })
+      });
+
+      //map.getView().fit(layerCafeterias.getExtent)
+    </script>
+    
+</body>
+</html>
